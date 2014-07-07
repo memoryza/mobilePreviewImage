@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+	<head>
+		<title>触屏缩放例子</title>
+		<meta charset="utf-8">		
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-touch-fullscreen" content="yes">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta property="wb:webmaster" content="途星网">
+        <meta name="author" content="ituxing">
+        <meta name="copyright" content="Copyright@途星网版权所有">
+         <meta name="description" content=" 途星网为您提供美国国内旅游套餐,绝对超值,游遍全美国,我们的顾客可以享受各类繁多,内容丰富,量身为您定制的旅游套餐,以及我们优质的服务">
+        <meta name="keywords" content=" 途星网,旅游,出境游,新浪旅游,美国,美国旅游,美国国内游,美东,夏威夷,黄石公园,旅游度假">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no,width=device-width">
+
+	</head>
+	<style>
+		*{padding: 0;margin: 0;}
+		body{background-color: rgb(29, 29, 31);}
+		.header{background-color: #ccc;opacity: 0.5;height: 30px;border-radius: 2px; position: absolute;top: 0;width: 100%;}
+		.footer{background-color: #ccc;opacity: 0.5;height: 45px;border-radius: 2px; position: absolute;bottom: 0;width: 100%;}
+		.header .return{margin:3px 0 3px 10px;}
+		.content ul,li {list-style: none;margin: 0;padding: 0;height: 568px;overflow: hidden;}
+		.content ul li {vertical-align: middle;line-height: 568px;position: absolute;overflow: hidden;}
+		.content ul,li img{width: 320px;vertical-align: middle;margin:0 auto;text-align: center;}
+	</style>
+	<body>
+		<div id="container" class="container">
+			
+		</div>
+	</body>
+	<script src="./hammer.min.js"></script>
+
+	<script src="./hammer.fakemultitouch.js"></script>
+	<script src="./hammer.showtouches.js"></script>
+
+	<!--[if !IE]> -->
+	<script>
+	  // show touches doesnt work well in older IE versions due lack of support of
+	  // the pointer-event css property
+	 
+	</script>
+	<!-- <![endif]-->
+
+	<script src="./previewPlugin.js"></script>
+	<script>
+		var imgList = ['1.jpg', '2.jpg','3.jpg','4.jpg','5.jpg'];		
+		var imgView = new previewPlugin({
+			id:'container', 
+			imgList: imgList,
+			headerTpl:'',
+			footerTpl: null,
+			scaleHeight: 348
+		});
+	</script>
+</html>
