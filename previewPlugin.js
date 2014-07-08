@@ -1,4 +1,7 @@
-//插件主要利用scale translate来处理
+/**
+  *插件主要利用scale translate来处理
+  *author:memoryza(jincai.wang@foxmail.com)
+**/
 function previewPlugin(s) {
 	this.initStatus(s);//初始化状态
 	this.initUI();//绘制UI
@@ -108,14 +111,48 @@ previewPlugin.prototype.bindEvent =  function() {
 				break;
 			case 'drag':
 				posX = lastPosX + ev.gesture.deltaX;
-				posY = lastPosY + ev.gesture.deltaY;
+				if(scale != 1) {					
+					posY = lastPosY + ev.gesture.deltaY;
+					var currentImg = self.container.getElementsByClassName('content')[0].getElementsByTagName('img')[self.indexId];
+					var realWidth = parseFloat(currentImg.style.width);
+					var realHeight = parseFloat(currentImg.style.height);
+					var skewingWidth = (window.innerWidth * scale - window.innerWidth)/2;//实际移动差值
+					var skewingHeight = (self.scaleHeight * scale - self.scaleHeight)/2;
+					var realSkewingWidth = (realWidth * scale - window.innerWidth)/2 > 0 ? (realWidth * scale - window.innerWidth)/2 : 0;//fixed实际图高宽小于展现图框的大小，出现负值的情况
+					var realSkewingHeight = (realHeight * scale - self.scaleHeight)/2 > 0 ? (realHeight * scale - self.scaleHeight)/2 : 0;
+					
+					if(skewingWidth >  realSkewingWidth) {
+						skewingWidth = realSkewingWidth;
+					}
+					if(skewingHeight >  realSkewingHeight) {
+						skewingHeight = realSkewingHeight;
+					}
+					//缩放的时候左右拖动有边界
+					if(posX < -skewingWidth) {
+						lastPosX = posX = -skewingWidth;					
+					} else if(posX > skewingWidth) {
+						lastPosX = posX = skewingWidth;
+					}
+
+					if(posY < -skewingHeight) {
+						lastPosY = posY = -skewingHeight;			
+					} else if(posY > skewingHeight) {
+						lastPosY = posY = skewingHeight;	
+					}					
+				}
 				break;
 			case 'transform':
 				scale = Math.min(last_scale * ev.gesture.scale, 10);
 				var imgScale = parseFloat(self.container.getElementsByClassName('content')[0].getElementsByTagName('img')[self.indexId].getAttribute('scale'));
 				scale = scale > imgScale ? imgScale : scale;
+				//坐标跟着缩放动态变化
+				if(scale > last_scale) {
+					posX = posX * scale / last_scale;
+					posY = posY * scale / last_scale;
+				}
+				
 				break;
-			case 'touchend':
+			case 'touchend':						
 				lastPosX = posX;
 				lastPosY = posY;
 				if(last_scale == 1 && scale == 1 && Math.abs(posX) > window.innerWidth/5) {
@@ -123,17 +160,34 @@ previewPlugin.prototype.bindEvent =  function() {
 					//情况各种状态
 					lastPosX = lastPosY = posX = posY = 0;
 				}
+
+				//fixed 高图或宽图在预览高宽乘以缩放因子以后比实际高度还打的问题
+				var currentImg = self.container.getElementsByClassName('content')[0].getElementsByTagName('img')[self.indexId];
+				var realWidth = parseFloat(currentImg.style.width);
+				var realHeight = parseFloat(currentImg.style.height);
+				var skewingWidth = (window.innerWidth * scale - window.innerWidth)/2;
+				var skewingHeight = (self.scaleHeight * scale - self.scaleHeight)/2;
+				var realSkewingWidth = (realWidth * scale - window.innerWidth)/2 > 0 ? (realWidth * scale - window.innerWidth)/2 : 0;//fixed实际图高宽小于展现图框的大小，出现负值的情况
+				var realSkewingHeight = (realHeight * scale - self.scaleHeight)/2 > 0 ? (realHeight * scale - self.scaleHeight)/2 : 0;
+			
+				if(skewingWidth >  realSkewingWidth) {
+					skewingWidth = realSkewingWidth;
+				}
+				if(skewingHeight >  realSkewingHeight) {
+					skewingHeight = realSkewingHeight;
+				}
+				
 				//缩放的时候左右拖动有边界
-				if(posX < -(window.innerWidth * scale - window.innerWidth)/2) {
-					lastPosX = posX = -(window.innerWidth * scale - window.innerWidth)/2;					
-				} else if(posX > (window.innerWidth * scale - window.innerWidth)/2) {
-					lastPosX = posX = (window.innerWidth * scale - window.innerWidth)/2;
+				if(posX < -skewingWidth) {
+					lastPosX = posX = -skewingWidth;					
+				} else if(posX > skewingWidth) {
+					lastPosX = posX = skewingWidth;
 				}
 
-				if(posY < -(self.scaleHeight * scale - self.scaleHeight)/2) {
-					lastPosY = posY = -(self.scaleHeight * scale - self.scaleHeight)/2;			
-				} else if(posY > (self.scaleHeight * scale - self.scaleHeight)/2) {
-					lastPosY = posY = (self.scaleHeight * scale - self.scaleHeight)/2;	
+				if(posY < -skewingHeight) {
+					lastPosY = posY = -skewingHeight;			
+				} else if(posY > skewingHeight) {
+					lastPosY = posY = skewingHeight;	
 				}
 				//微调整当缩放比过低就自动还原为1
 				if(scale <= 1) {
