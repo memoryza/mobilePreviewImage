@@ -146,7 +146,7 @@ previewPlugin.prototype.bindEvent =  function() {
 				var imgScale = parseFloat(self.container.getElementsByClassName('content')[0].getElementsByTagName('img')[self.indexId].getAttribute('scale'));
 				scale = scale > imgScale ? imgScale : scale;
 				//坐标跟着缩放动态变化
-				if(scale > last_scale) {
+				if(scale < last_scale) {
 					posX = posX * scale / last_scale;
 					posY = posY * scale / last_scale;
 				}
