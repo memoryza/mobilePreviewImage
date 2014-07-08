@@ -19,7 +19,7 @@ previewPlugin.prototype = {
 		this.imageLen = s.imgList.length;
 		this.browserKit = ['-moz-', '', '-webkit-','-o-', '-ms-'];
 	},
-    initUI: function() {
+  initUI: function() {
 		var self = this;
 		var containerDom = document.createDocumentFragment();
 
@@ -52,7 +52,7 @@ previewPlugin.prototype = {
 
 		this.container.appendChild(containerDom);
 	},
-    repaintUI: function() {
+  repaintUI: function() {
 		var self = this;
 		var imgs =  self.container.getElementsByClassName('content')[0].getElementsByTagName('img');
 		for(var i = 0, _len = imgs.length; i < _len ; i++) {
